@@ -1,0 +1,27 @@
+local hook_tickets
+local give_tickets = math.random(500,973)-- random number of tickets
+local x
+
+hook_tickets = hookmetamethod(game, "__namecall", function(...)
+    local args = {...}
+    local method = getnamecallmethod()
+    if tostring(args[1]) == "GeneralFunction" and method == "InvokeServer" then
+        if tostring(args[2]) == "SubtractTicket" then
+            return true, give_tickets
+        elseif tostring(args[2]) == "LotteryTickets" then
+            return give_tickets
+        end
+    end
+    return hook_tickets(...)
+end)
+
+for i,v in pairs(getgc()) do
+    if getinfo(v).name == "onSpinButton" then
+        x = v 
+        break
+    end
+end
+
+while wait() do
+    x()
+end
